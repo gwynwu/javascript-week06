@@ -6,16 +6,9 @@
         <style>
         body {
         	margin:0;
-        	width:100%;
-        	height:100%;
         }
         #content{
-        }
-        #image{
-        	margin-left:15%;
-        	margin-top:5px;
-        	width: 70%;
-        	height: 50%;
+        	margin:0 auto;
         }
         </style>
     </head>
@@ -25,20 +18,45 @@
     </div>
         <script src="jquery-1.11.0.js"></script>
         <script>
-		var num = 1;
-        var max = 4;
+        var images = [
+        	{
+        		src: 'images/1.jpg',
+        		width: 900,
+        		height: 654
+        	}, {
+        		src: 'images/2.jpg',
+        		width: 900,
+        		height: 654
+        	}, {
+        		src: 'images/3.jpg',
+        		width: 900,
+        		height: 654
+        	}, {
+        		src: 'images/4.jpg',
+        		width: 900,
+        		height: 654
+        	}
+        ];
+		var num = 0;
+        var max = images.length - 1;
 		$('#image').click(function() {
 			num++;
 			if (num > max) {
-				num = 1;
+				num = 0;
 			}
-			$('#image').fadeOut(250, function() {
-			//fadeOut is a build in style
-				$('#image').attr('src', 'images/' + num + '.jpg');
-				//attr is adding sth, find the words in the id area
-				$('#image').fadeIn(250);
-			});
+			var image = images[num];
+   			this.src = image.src;
+   			resizeImage();
 		});
+		$(window).resize(resizeImage);
+		function resizeImage() {
+			var image = images[num];
+			var ratio = image.width / image.height;
+			var width = $(window).width();
+			var height = width / ratio;
+			$('#image').css('width', width);
+			$('#image').css('height', height);
+		}
         </script>
     </body>
 </html>
