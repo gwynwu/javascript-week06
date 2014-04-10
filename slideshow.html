@@ -5,59 +5,85 @@
         <title>Slideshow</title>
         <style>
         body {
-        	margin:0;
+        	margin: 0;
         }
-        #content{
-        	margin:0 auto;
+		@media all and (max-width:2700px) {body {font-size:60px;}}
+		@media all and (max-width:2000px) {body {font-size:55px;}}
+		@media all and (max-width:1600px) {body {font-size:50px;}}
+		@media all and (max-width:1200px) {body {font-size:45px;}}
+		@media all and (max-width:1100px) {body {font-size:35px;}}
+		@media all and (max-width: 900px) {body {font-size:25px;}}
+		@media all and (max-width: 700px) {body {font-size:20px;}}
+		@media all and (max-width: 500px) {body {font-size:15px;}}
+	
+        #title {
+        	font-family: sans-serif;
+        	font-weight: bold;
+        	text-align: center;
+        	margin-top: 5px;
         }
+        
         </style>
     </head>
     <body>
-    <div id="content">
-        <img id="image" src="images/1.jpg" alt="">
-    </div>
+		<div id="title">ABSTRACT LANGUAGE</div>
+    	<div id="photo"></div>
         <script src="jquery-1.11.0.js"></script>
+        <script src="flickr.js"></script>
         <script>
-        var images = [
-        	{
-        		src: 'images/1.jpg',
-        		width: 900,
-        		height: 654
-        	}, {
-        		src: 'images/2.jpg',
-        		width: 900,
-        		height: 654
-        	}, {
-        		src: 'images/3.jpg',
-        		width: 900,
-        		height: 654
-        	}, {
-        		src: 'images/4.jpg',
-        		width: 900,
-        		height: 654
-        	}
-        ];
-		var num = 0;
-        var max = images.length - 1;
-        resizeImage();
-		$('#image').click(function() {
-			num++;
-			if (num > max) {
-				num = 0;
+
+        var flickr = new Flickr('8e293eb5bc01282cc363187cfb4c954a');
+        flickr.photos.search({
+        	text: "abstract",
+        	extras: "o_dims"
+        	//extra size
+        	
+        }, function(rx) {
+    		var images = rx.photos.photo;   //this is new images//
+    		var num = 0;
+        	var max = images.length - 1;
+        	console.log(images[num]); 
+        	//tool to curious what is dealing with
+        	
+        	$('#photo').html('<img src="' + images[num].src('b') + '">'); 
+        	//set up the click before we click, which is to load image first.
+        	
+        	resizeImage();
+        	
+			$('#photo').click(function() {
+				$('#photo').fadeOut(500, function() {
+					num++;
+					if (num > max) {
+						num = 0;
+					}
+					$('#photo').html('<img src="' + images[num].src('b') + '">'); //string
+					resizeImage();
+					$('#photo').fadeIn(500);
+					
+					
+				});
+					/*
+   					this.src = image.src;
+   					using attr to list src and images
+   					*/
+   					var image = images[num];
+   					resizeImage();
+				});
+				
+			function resizeImage() {
+				var image = images[num];
+				var ratio = image.o_width / image.o_height;
+				var width = $(window).width();
+				var height = width / ratio;
+				$('#photo img').css('width', width);
+				$('#photo img').css('height', height);
 			}
-			var image = images[num];
-   			this.src = image.src;
-   			resizeImage();
-		});
-		$(window).resize(resizeImage);
-		function resizeImage() {
-			var image = images[num];
-			var ratio = image.width / image.height;
-			var width = $(window).width();
-			var height = width / ratio;
-			$('#image').css('width', width);
-			$('#image').css('height', height);
-		}
+    		
+    		$(window).resize(resizeImage); 
+    		
+		})
+       
+		
         </script>
     </body>
 </html>
