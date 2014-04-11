@@ -33,18 +33,34 @@
         <script>
 
         var flickr = new Flickr('8e293eb5bc01282cc363187cfb4c954a');
-        flickr.photos.search({
-        	text: "abstract",
-        	extras: "o_dims"
-        	//extra size
-        	
-        }, function(rx) {
-    		var images = rx.photos.photo;   //this is new images//
-    		var num = 0;
+        
+        var args1 = {
+        	text: "abstract visual colors shapes design",
+        	extras: "o_dims",
+        	per_page: 15
+        };
+        
+        var args2 = {
+        	text: "red yellow blue flame",
+        	extras: "o_dims",
+        	per_page: 15
+        };
+        var images; 
+        
+        flickr.photos.search(args1, function(rx) {
+    		images = rx.photos.photo;
+    		flickr.photos.search(args2, function(rx) {
+				images = images.concat(rx.photos.photo);
+				images.sort(function(a, b) {
+					if (Math.random() < 0.5) {
+						return -1;
+					} else {
+						return 1;
+					}
+        	});
+        	var num = 0;
         	var max = images.length - 1;
-        	console.log(images[num]); 
-        	//tool to curious what is dealing with
-        	
+        	console.log(images[num]);
         	$('#photo').html('<img src="' + images[num].src('b') + '">'); 
         	//set up the click before we click, which is to load image first.
         	
@@ -81,9 +97,9 @@
     		
     		$(window).resize(resizeImage); 
     		
-		})
+		});
        
-		
+		})
         </script>
     </body>
 </html>
